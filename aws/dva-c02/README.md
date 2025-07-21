@@ -1,958 +1,652 @@
-# DVA-C02 - AWS Certified Developer - Associate
 
-## Amazon DynamoDB
-<div align="center">
-<img src="https://github.com/hellotatiramos/estudos-certificacoes/assets/158481113/8513ce66-f3fd-4d9f-9350-0e14b20292b9" width="700px" />
-</div>
 
-## Principais Conceitos
-* **Tabelas:** A unidade básica de armazenamento no DynamoDB. Cada tabela contém múltiplos itens e cada item é um conjunto de atributos.
-* **Itens:** Análogos às linhas em um banco de dados relacional. Cada item é identificado de forma única por uma chave primária.
-* **Atributos:** Análogos às colunas em um banco de dados relacional. São os dados associados a um item.
-* **Chave Primária:** Pode ser uma chave de partição (hash) ou uma combinação de chave de partição e chave de classificação (hash-range).
-* **Índices Secundários:** Permitem consultas eficientes usando atributos que não fazem parte da chave primária.
+# Cronograma de Estudo para AWS Certified Developer – Associate (DVA-C02)
 
-## Operações Principais da API
+**Período**: 21 de julho a 28 de novembro de 2025 (19 semanas)  
+**Objetivo**: Obter a certificação AWS Certified Developer – Associate (DVA-C02) em 28 de novembro de 2025  
+**Carga Horária**: 1 hora por dia, de segunda a sexta (ex.: 19h às 20h, horário sugerido para consistência)  
+**Linguagem**: Java  
+**Foco**: API Gateway, Lambda, DynamoDB, SQS, SNS, AWS SAM, SDK Java  
+**Recursos**:  
+- **Curso**: Stephane Maarek (Udemy).  
+- **Simulados**: Stephane Maarek (5 simulados), Tutorials Dojo (5 simulados).  
+- **Conta AWS**: Nível gratuito (monitore custos via AWS Budgets).  
+- **Ferramentas**: AWS CLI, AWS SAM CLI, SDK Java (Maven/Gradle), IDE (ex.: IntelliJ), Postman.  
+- **Exportação**: Salve este arquivo como `aws-developer-study-plan.md`. Transfira para outro computador via USB, e-mail ou repositório Git (ex.: GitHub). Visualize em editores Markdown (VS Code, Obsidian) ou converta para PDF com Pandoc (`pandoc aws-developer-study-plan.md -o cronograma.pdf`).
 
-### Control Plane 
-O "control plane" (plano de controle) refere-se às operações administrativas e de gerenciamento de um serviço. No caso do DynamoDB, essas operações incluem:
+## Pré-requisitos de Configuração
+1. **AWS CLI**: Instale a AWS CLI v2 (`aws configure` para configurar credenciais).  
+   - Download: https://aws.amazon.com/cli/  
+   - Teste: `aws sts get-caller-identity`  
+2. **AWS SAM CLI**: Instale para implantação de projetos serverless.  
+   - Download: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html  
+   - Teste: `sam --version`  
+3. **SDK Java**: Configure um projeto Maven/Gradle com dependência `software.amazon.awssdk:bom:2.20.0` (ou versão mais recente). Exemplo (Maven):  
+   ```xml
+   <dependency>
+       <groupId>software.amazon.awssdk</groupId>
+       <artifactId>dynamodb</artifactId>
+   </dependency>
+   ```  
+4. **IDE**: Use IntelliJ ou outra IDE para desenvolvimento Java.  
+5. **Postman**: Instale para testar APIs.  
+6. **Conta AWS**: Crie uma conta gratuita (https://aws.amazon.com/free). Configure AWS Budgets para evitar custos.  
+7. **Repositório**: Crie um repositório local ou no GitHub para organizar os projetos.  
+   - Exemplo: `git init aws-certification-projects`  
+   - Commit regularmente para facilitar transferência entre computadores.
 
-* **CreateTable:** Cria uma nova tabela no DynamoDB.
-* **DescribeTable:** Obtém informações sobre a estrutura e configurações de uma tabela.
-* **ListTables:** Lista todas as tabelas em uma conta do DynamoDB.
-* **UpdateTable:** Atualiza as configurações de uma tabela existente, como throughput provisionado, índices ou definições de atributo.
-* **DeleteTable:** Exclui uma tabela do DynamoDB.
+## Projeto Prático
+**Amigas na Estrada**: Uma API REST para conectar mulheres que viajam sozinhas e desejam encontrar companheiras de viagem.  
+- **Serviços AWS**: API Gateway (endpoints REST), Lambda (lógica de backend), DynamoDB (banco de dados para perfis e viagens), SQS (fila para notificações assíncronas), SNS (notificações por e-mail), AWS SAM (implantação serverless).  
+- **Funcionalidades**:  
+  - Criar perfil de usuária (POST `/users`).  
+  - Consultar perfis compatíveis por destino/data (GET `/users/{destination}`).
+  - Enviar solicitação de conexão (POST `/connections`, enfileirada no SQS).  
+  - Notificar usuárias sobre conexões via SNS.  
 
-### Data Plane
-O "data plane" (plano de dados) refere-se às operações relacionadas à manipulação dos dados propriamente ditos, ou seja, a leitura e escrita dos dados armazenados no DynamoDB. Essas operações são muito mais frequentes que as operações do control plane e incluem:
+## Cronograma Detalhado
 
-* **PutItem:** Insere um único item ou substitui um item existente em uma tabela.
-* **BatchWriteItem:** Insere até 25 itens em uma ou mais tabelas em uma única chamada.
-* **GetItem:** Recupera um item de uma tabela com base na chave primária.
-* **BatchGetItem:** Recupera até 100 itens de uma ou mais tabelas em uma única chamada.
-* **UpdateItem:** Atualiza um atributo de um item existente em uma tabela.
-* **DeleteItem:** Exclui um item de uma tabela com base na chave primária.
+### Semana 1 (21 a 25 de julho de 2025): Fundamentos e Configuração
+- **Segunda, 21/07**  
+  **Objetivo**: Entender fundamentos da AWS e configurar ambiente.  
+  **Tarefa**: Assista à seção "AWS Fundamentals" do curso de Stephane Maarek (20 min). Instale e configure AWS CLI e SDK Java (Maven/Gradle) em um projeto Java (40 min). Teste com `aws configure` e crie um projeto com dependência `software.amazon.awssdk:dynamodb`.  
+  **Entregável**: AWS CLI configurado, projeto Java com SDK funcional.  
 
-## Tipos de dados que o DynamoDB suporta
-O Amazon DynamoDB suporta diversos tipos de dados que podem ser categorizados em três grupos principais: tipos escalares, tipos de documento e tipos de conjunto. Cada grupo oferece diferentes formas de armazenar e manipular dados, permitindo uma grande flexibilidade na modelagem do banco de dados. Vamos explorar cada um desses grupos em detalhes.
+- **Terça, 22/07**  
+  **Objetivo**: Aprender IAM e permissões.  
+  **Tarefa**: Assista à seção "IAM" do curso de Maarek (20 min). Crie um usuário IAM com permissões para Lambda e DynamoDB via AWS Console (40 min). Teste com `aws sts get-caller-identity`.  
+  **Entregável**: Usuário IAM configurado e testado.  
 
-### Tipos Escalares (Scalar Types)
-Os tipos escalares são os tipos de dados mais básicos e incluem valores individuais e simples. DynamoDB suporta os seguintes tipos escalares:
+- **Quarta, 23/07**  
+  **Objetivo**: Entender AWS Lambda.  
+  **Tarefa**: Assista à seção "Lambda" do curso de Maarek (20 min). Crie uma função Lambda em Java ("Hello World") via AWS Console (40 min). Código:  
+  ```java
+  import com.amazonaws.services.lambda.runtime.Context;
+  import com.amazonaws.services.lambda.runtime.RequestHandler;
+  import java.util.Map;
 
-**1. String (S)**
-
-* Representa dados de texto.
-* Pode conter até 400 KB de texto.
-* Exemplo: `"Alice"`
-  
-**2. Number (N)**
-
-* Representa dados numéricos.
-* Pode ser inteiro ou ponto flutuante.
-* Exemplo: `123`, `45.67`
-
-**3. Binary (B)**
-
-* Representa dados binários.
-* Pode conter até 400 KB de dados binários.
-* Exemplo: `b'\x01\x02\x03'`
-
-**4. Boolean (BOOL)**
-
-* Representa um valor booleano.
-* Pode ser `true` ou `false`.
-* Exemplo: `true`
-
-**5. Null (NULL)**
-
-* Representa um valor nulo.
-* Usado para indicar a ausência de um valor.
-* Exemplo: `NULL`
-
-### Tipos de Documento (Document Types)
-
-Os tipos de documento permitem armazenar estruturas de dados complexas, como JSON, que podem conter outros tipos de dados aninhados.
-
-DynamoDB suporta os seguintes tipos de documento:
-
-**1. Map (M)**
-
-* Representa um objeto ou estrutura de dados semelhante a um dicionário.
-* Pode conter pares chave-valor, onde as chaves são strings e os valores podem ser de qualquer tipo de dado suportado pelo DynamoDB.
-* Exemplo:
-
-```json
-{
-  "Name": {"S": "Alice"},
-  "Age": {"N": "30"},
-  "Address": {
-    "M": {
-      "Street": {"S": "123 Main St"},
-      "City": {"S": "Wonderland"}
-    }
+  public class HelloWorldHandler implements RequestHandler<Map<String, String>, String> {
+      @Override
+      public String handleRequest(Map<String, String> input, Context context) {
+          return "Hello, " + input.getOrDefault("name", "AWS");
+      }
   }
-}
-```
+  ```  
+  **Entregável**: Função Lambda criada e testada.  
+
+- **Quinta, 24/07**  
+  **Objetivo**: Configurar API Gateway com Lambda.  
+  **Tarefa**: Assista à seção "API Gateway" do curso de Maarek (20 min). Crie uma API REST no API Gateway com endpoint GET `/hello` que aciona a função Lambda (40 min). Teste via Postman.  
+  **Entregável**: API Gateway configurada com endpoint funcional.  
+
+- **Sexta, 25/07**  
+  **Objetivo**: Iniciar Projeto Amigas na Estrada.  
+  **Tarefa**: Revise integração API Gateway-Lambda no curso de Maarek (20 min). Crie uma tabela DynamoDB `Users` (chave de partição: `userId`, chave de ordenação: `destination`) via AWS Console (40 min). Insira um item manualmente.  
+  **Entregável**: Tabela `Users` criada.  
+
+### Semana 2 (28 de julho a 1 de agosto de 2025): Lambda e DynamoDB
+- **Segunda, 28/07**  
+  **Objetivo**: Usar SDK Java com Lambda.  
+  **Tarefa**: Assista à seção "SDK Java" do curso de Maarek (20 min). Crie uma função Lambda para salvar perfis na tabela `Users` usando SDK Java (40 min). Código:  
+  ```java
+  import com.amazonaws.services.lambda.runtime.Context;
+  import com.amazonaws.services.lambda.runtime.RequestHandler;
+  import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+  import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
+  import java.util.HashMap;
+  import java.util.Map;
+
+  public class CreateUserHandler implements RequestHandler<Map<String, String>, String> {
+      private final DynamoDbClient dynamoDb = DynamoDbClient.create();
+
+      @Override
+      public String handleRequest(Map<String, String> input, Context context) {
+          Map<String, String> item = new HashMap<>();
+          item.put("userId", input.get("userId"));
+          item.put("destination", input.get("destination"));
+          item.put("travelDate", input.get("travelDate"));
+
+          PutItemRequest request = PutItemRequest.builder()
+                  .tableName("Users")
+                  .item(item)
+                  .build();
+          dynamoDb.putItem(request);
+          return "User created: " + input.get("userId");
+      }
+  }
+  ```  
+  **Entregável**: Função Lambda salvando perfis no DynamoDB.  
+
+- **Terça, 29/07**  
+  **Objetivo**: Consultar DynamoDB com SDK Java.  
+  **Tarefa**: Assista à seção "DynamoDB GET" do curso de Maarek (20 min). Crie uma função Lambda para consultar perfis por `destination` (GET `/users/{destination}`) usando SDK Java (40 min). Teste via API Gateway.  
+  **Entregável**: Endpoint GET funcional.  
+
+- **Quarta, 30/07**  
+  **Objetivo**: Configurar permissões IAM para Lambda-DynamoDB.  
+  **Tarefa**: Revise permissões IAM no curso de Maarek (20 min). Crie uma política IAM para a função Lambda acessar `Users` (40 min). Teste a função.  
+  **Entregável**: Permissões IAM configuradas.  
+
+- **Quinta, 31/07**  
+  **Objetivo**: Finalizar endpoints do Projeto Amigas na Estrada.  
+  **Tarefa**: Assista à seção "Integração API Gateway-Lambda-DynamoDB" do curso de Maarek (20 min). Teste o projeto via Postman (POST `/users`, GET `/users/{destination}`) e valide dados no DynamoDB (40 min).  
+  **Entregável**: Endpoints do projeto funcionais.  
+
+- **Sexta, 01/08**  
+  **Objetivo**: Introdução a SQS.  
+  **Tarefa**: Assista à seção "SQS" do curso de Maarek (20 min). Crie uma fila SQS `ConnectionQueue` via AWS Console e envie uma mensagem de teste via AWS CLI (40 min).  
+  **Entregável**: Fila SQS criada e testada.  
+
+### Semana 3 (4 a 8 de agosto de 2025): SQS e SNS
+- **Segunda, 04/08**  
+  **Objetivo**: Integrar SQS com Lambda.  
+  **Tarefa**: Assista à seção "Integração SQS-Lambda" do curso de Maarek (20 min). Crie uma função Lambda em Java para consumir mensagens da `ConnectionQueue` (40 min). Código:  
+  ```java
+  import com.amazonaws.services.lambda.runtime.Context;
+  import com.amazonaws.services.lambda.runtime.events.SQSEvent;
+
+  public class ProcessConnectionHandler {
+      public void handleRequest(SQSEvent event, Context context) {
+          for (SQSEvent.SQSMessage msg : event.getRecords()) {
+              context.getLogger().log("Connection request: " + msg.getBody());
+          }
+      }
+  }
+  ```  
+  **Entregável**: Função Lambda consumindo mensagens SQS.  
+
+- **Terça, 05/08**  
+  **Objetivo**: Introdução a SNS.  
+  **Tarefa**: Assista à seção "SNS" do curso de Maarek (20 min). Crie um tópico SNS `ConnectionTopic` e adicione um assinante de e-mail (40 min). Publique uma mensagem de teste via AWS Console.  
+  **Entregável**: Tópico SNS configurado.  
+
+- **Quarta, 06/08**  
+  **Objetivo**: Integrar SNS com Lambda e SQS.  
+  **Tarefa**: Revise integração SQS-SNS no curso de Maarek (20 min). Modifique a função Lambda para publicar mensagens do SQS no `ConnectionTopic` (40 min). Código:  
+  ```java
+  import com.amazonaws.services.lambda.runtime.Context;
+  import com.amazonaws.services.lambda.runtime.events.SQSEvent;
+  import software.amazon.awssdk.services.sns.SnsClient;
+  import software.amazon.awssdk.services.sns.model.PublishRequest;
+
+  public class ProcessConnectionHandler {
+      private final SnsClient snsClient = SnsClient.create();
+
+      public void handleRequest(SQSEvent event, Context context) {
+          for (SQSEvent.SQSMessage msg : event.getRecords()) {
+              PublishRequest request = PublishRequest.builder()
+                      .topicArn("arn:aws:sns:us-east-1:123456789012:ConnectionTopic")
+                      .message(msg.getBody())
+                      .build();
+              snsClient.publish(request);
+          }
+      }
+  }
+  ```  
+  **Entregável**: Integração SQS-SNS-Lambda funcional.  
+
+- **Quinta, 07/08**  
+  **Objetivo**: Adicionar notificações ao Projeto Amigas na Estrada.  
+  **Tarefa**: Assista à seção "Mensageria" do curso de Maarek (20 min). Configure o projeto: Crie uma função Lambda que consome da `ConnectionQueue` e publica no `ConnectionTopic`. Teste enviando uma mensagem via SDK Java (40 min).  
+  **Entregável**: Notificações do projeto configuradas.  
+
+- **Sexta, 08/08**  
+  **Objetivo**: Introdução a AWS SAM.  
+  **Tarefa**: Assista à seção "AWS SAM" do curso de Maarek (20 min). Instale AWS SAM CLI e crie um projeto SAM básico com uma função Lambda em Java (40 min). Teste localmente com `sam local invoke`.  
+  **Entregável**: Projeto SAM inicializado.  
+
+### Semana 4 (11 a 15 de agosto de 2025): AWS SAM e Implantação
+- **Segunda, 11/08**  
+  **Objetivo**: Implantar Projeto Amigas na Estrada com SAM.  
+  **Tarefa**: Revise SAM templates no curso de Maarek (20 min). Crie um `template.yaml` para o projeto (SQS, SNS, Lambda, API Gateway, DynamoDB) (40 min). Exemplo:  
+  ```yaml
+  Resources:
+    ConnectionQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ConnectionQueue
+    ConnectionTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: ConnectionTopic
+    CreateUserFunction:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ./target/lambda.jar
+        Handler: CreateUserHandler::handleRequest
+        Runtime: java11
+        Policies:
+          - DynamoDBWritePolicy:
+              TableName: Users
+    ProcessConnectionFunction:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ./target/lambda.jar
+        Handler: ProcessConnectionHandler::handleRequest
+        Runtime: java11
+        Events:
+          SQSEvent:
+            Type: SQS
+            Properties:
+              Queue: !GetAtt ConnectionQueue.Arn
+  ```  
+  **Entregável**: Template SAM criado.  
+
+- **Terça, 12/08**  
+  **Objetivo**: Implantar e testar Projeto Amigas na Estrada.  
+  **Tarefa**: Assista à seção "Implantação SAM" do curso de Maarek (20 min). Implante o projeto com `sam deploy` (40 min). Teste enviando uma mensagem SQS via SDK Java e verificando a notificação SNS.  
+  **Entregável**: Projeto implantado.  
+
+- **Quarta, 13/08**  
+  **Objetivo**: Introdução a CloudWatch.  
+  **Tarefa**: Assista à seção "CloudWatch" do curso de Maarek (20 min). Habilite CloudWatch Logs para a função Lambda do projeto e analise logs após uma execução (40 min).  
+  **Entregável**: Logs visíveis no CloudWatch.  
+
+- **Quinta, 14/08**  
+  **Objetivo**: Introdução a AWS X-Ray.  
+  **Tarefa**: Assista à seção "X-Ray" do curso de Maarek (20 min). Habilite X-Ray na função Lambda do projeto e analise traces (40 min).  
+  **Entregável**: X-Ray configurado.  
+
+- **Sexta, 15/08**  
+  **Objetivo**: Finalizar Projeto Amigas na Estrada.  
+  **Tarefa**: Revise integração SQS-SNS-Lambda no curso de Maarek (20 min). Teste o projeto completo: envie mensagens via SDK Java, verifique processamento e notificações (40 min).  
+  **Entregável**: Projeto concluído.  
+
+### Semana 5 (18 a 22 de agosto de 2025): Segurança
+- **Segunda, 18/08**  
+  **Objetivo**: Aprofundar em IAM avançado.  
+  **Tarefa**: Assista à seção "Políticas IAM Avançadas" do curso de Maarek (20 min). Crie uma política IAM com condições (ex.: acesso ao DynamoDB apenas de uma VPC) para o projeto (40 min).  
+  **Entregável**: Política IAM com condições configurada.  
+
+- **Terça, 19/08**  
+  **Objetivo**: Introdução a Amazon Cognito.  
+  **Tarefa**: Assista à seção "Cognito" do curso de Maarek (20 min). Crie um User Pool no Cognito e configure autenticação para o endpoint `/users` do projeto (40 min).  
+  **Entregável**: Cognito configurado no projeto.  
+
+- **Quarta, 20/08**  
+  **Objetivo**: Introdução a AWS KMS.  
+  **Tarefa**: Assista à seção "KMS" do curso de Maarek (20 min). Crie uma chave KMS e use-a para criptografar dados na tabela `Users` do projeto (40 min).  
+  **Entregável**: Dados criptografados no DynamoDB.  
+
+- **Quinta, 21/08**  
+  **Objetivo**: Introdução a AWS Secrets Manager.  
+  **Tarefa**: Assista à seção "Secrets Manager" do curso de Maarek (20 min). Armazene uma credencial no Secrets Manager e acesse-a via SDK Java na função Lambda do projeto (40 min).  
+  **Entregável**: Secrets Manager integrado.  
+
+- **Sexta, 22/08**  
+  **Objetivo**: Revisar segurança no Projeto Amigas na Estrada.  
+  **Tarefa**: Revise práticas de segurança no curso de Maarek (20 min). Teste o projeto com Cognito, KMS e Secrets Manager, validando autenticação e criptografia (40 min).  
+  **Entregável**: Projeto com segurança implementada.  
+
+### Semana 6 (25 a 29 de agosto de 2025): CI/CD
+- **Segunda, 25/08**  
+  **Objetivo**: Introdução a CodePipeline.  
+  **Tarefa**: Assista à seção "CodePipeline" do curso de Maarek (20 min). Crie um pipeline simples no CodePipeline para implantar uma função Lambda (40 min).  
+  **Entregável**: Pipeline básico configurado.  
+
+- **Terça, 26/08**  
+  **Objetivo**: Introdução a CodeBuild.  
+  **Tarefa**: Assista à seção "CodeBuild" do curso de Maarek (20 min). Configure um projeto CodeBuild para compilar o código Java do projeto (40 min).  
+  **Entregável**: Projeto CodeBuild configurado.  
+
+- **Quarta, 27/08**  
+  **Objetivo**: Integrar CodePipeline com SAM.  
+  **Tarefa**: Revise integração CodePipeline-SAM no curso de Maarek (20 min). Modifique o pipeline para implantar o Projeto Amigas na Estrada usando SAM (40 min).  
+  **Entregável**: Pipeline com SAM funcional.  
+
+- **Quinta, 28/08**  
+  **Objetivo**: Testar pipeline CI/CD.  
+  **Tarefa**: Assista à seção "Boas Práticas CI/CD" do curso de Maarek (20 min). Faça uma alteração no código do projeto e teste o pipeline completo (40 min).  
+  **Entregável**: Pipeline testado.  
+
+- **Sexta, 29/08**  
+  **Objetivo**: Adicionar monitoramento ao projeto.  
+  **Tarefa**: Assista à seção "CloudWatch Logs" do curso de Maarek (20 min). Adicione métricas personalizadas ao projeto (ex.: contagem de conexões processadas) usando SDK Java (40 min).  
+  **Entregável**: Métricas personalizadas configuradas.  
+
+### Semana 7 (1 a 5 de setembro de 2025): Otimização
+- **Segunda, 01/09**  
+  **Objetivo**: Otimizar Lambda.  
+  **Tarefa**: Assista à seção "Otimização de Lambda" do curso de Maarek (20 min). Ajuste a função Lambda do projeto (ex.: aumentar memória, reduzir tempo de execução) e teste (40 min).  
+  **Entregável**: Função otimizada.  
+
+- **Terça, 02/09**  
+  **Objetivo**: Otimizar DynamoDB.  
+  **Tarefa**: Assista à seção "Otimização de DynamoDB" do curso de Maarek (20 min). Adicione um índice secundário global à tabela `Users` e teste consultas (40 min).  
+  **Entregável**: Índice configurado.  
+
+- **Quarta, 03/09**  
+  **Objetivo**: Revisar segurança.  
+  **Tarefa**: Revise segurança no curso de Maarek (20 min). Adicione Cognito ao projeto para proteger o endpoint `/users` (40 min).  
+  **Entregável**: Autenticação configurada.  
+
+- **Quinta, 04/09**  
+  **Objetivo**: Revisar monitoramento.  
+  **Tarefa**: Assista à seção "CloudWatch Avançado" do curso de Maarek (20 min). Crie um alarme CloudWatch para monitorar falhas no projeto (40 min).  
+  **Entregável**: Alarme configurado.  
+
+- **Sexta, 05/09**  
+  **Objetivo**: Revisar CI/CD.  
+  **Tarefa**: Revise CI/CD no curso de Maarek (20 min). Adicione o projeto a um pipeline CodePipeline (40 min).  
+  **Entregável**: Pipeline configurado.  
+
+### Semana 8 (8 a 12 de setembro de 2025): Revisão Geral
+- **Segunda, 08/09**  
+  **Objetivo**: Revisar Lambda e API Gateway.  
+  **Tarefa**: Assista à revisão "Lambda/API Gateway" do curso de Maarek (20 min). Teste o projeto via Postman (40 min).  
+  **Entregável**: Projeto revisado.  
+
+- **Terça, 09/09**  
+  **Objetivo**: Revisar DynamoDB e SDK.  
+  **Tarefa**: Assista à revisão "DynamoDB" do curso de Maarek (20 min). Adicione uma consulta complexa ao projeto usando SDK Java (40 min).  
+  **Entregável**: Consulta implementada.  
+
+- **Quarta, 10/09**  
+  **Objetivo**: Revisar SQS/SNS.  
+  **Tarefa**: Assista à revisão "SQS/SNS" do curso de Maarek (20 min). Teste o projeto enviando mensagens via SDK Java (40 min).  
+  **Entregável**: Projeto revisado.  
+
+- **Quinta, 11/09**  
+  **Objetivo**: Revisar segurança.  
+  **Tarefa**: Assista à revisão "IAM/Cognito" do curso de Maarek (20 min). Valide autenticação no projeto (40 min).  
+  **Entregável**: Autenticação revisada.  
+
+- **Sexta, 12/09**  
+  **Objetivo**: Revisar implantação.  
+  **Tarefa**: Assista à revisão "CI/CD" do curso de Maarek (20 min). Teste o pipeline do projeto (40 min).  
+  **Entregável**: Pipeline revisado.  
+
+### Semana 9 (15 a 19 de setembro de 2025): Simulados
+- **Segunda, 15/09**  
+  **Objetivo**: Simulado 1 Tutorials Dojo.  
+  **Tarefa**: Faça o Simulado 1 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Terça, 16/09**  
+  **Objetivo**: Simulado 1 Maarek.  
+  **Tarefa**: Faça o Simulado 1 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 17/09**  
+  **Objetivo**: Simulado 2 Tutorials Dojo.  
+  **Tarefa**: Faça o Simulado 2 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quinta, 18/09**  
+  **Objetivo**: Simulado 2 Maarek.  
+  **Tarefa**: Faça o Simulado 2 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Sexta, 19/09**  
+  **Objetivo**: Revisar tópicos fracos.  
+  **Tarefa**: Identifique tópicos fracos nos simulados (20 min). Estude esses tópicos no curso de Maarek (40 min).  
+  **Entregável**: Tópicos fracos revisados.  
+
+### Semana 10 (22 a 26 de setembro de 2025): Simulados
+- **Segunda, 22/09**  
+  **Objetivo**: Simulado 3 Tutorials Dojo.  
+  **Tarefa**: Faça o Simulado 3 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Terça, 23/09**  
+  **Objetivo**: Simulado 3 Maarek.  
+  **Tarefa**: Faça o Simulado 3 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 24/09**  
+  **Objetivo**: Simulado 4 Tutorials Dojo.  
+  **Tarefa**: Faça o Simulado 4 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quinta, 25/09**  
+  **Objetivo**: Simulado 4 Maarek.  
+  **Tarefa**: Faça o Simulado 4 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Sexta, 26/09**  
+  **Objetivo**: Revisar tópicos fracos.  
+  **Tarefa**: Identifique tópicos fracos nos simulados (20 min). Estude esses tópicos no curso de Maarek (40 min).  
+  **Entregável**: Tópicos fracos revisados.  
+
+### Semana 11 (29 de setembro a 3 de outubro de 2025): Simulados
+- **Segunda, 29/09**  
+  **Objetivo**: Simulado 5 Tutorials Dojo.  
+  **Tarefa**: Faça o Simulado 5 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Terça, 30/09**  
+  **Objetivo**: Simulado 5 Maarek.  
+  **Tarefa**: Faça o Simulado 5 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 01/10**  
+  **Objetivo**: Revisar tópicos fracos.  
+  **Tarefa**: Identifique tópicos fracos nos simulados (20 min). Estude esses tópicos no curso de Maarek (40 min).  
+  **Entregável**: Tópicos fracos revisados.  
+
+- **Quinta, 02/10**  
+  **Objetivo**: Repetir Simulado 1 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 1 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Sexta, 03/10**  
+  **Objetivo**: Repetir Simulado 1 Maarek.  
+  **Tarefa**: Refaça o Simulado 1 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+### Semana 12 (6 a 10 de outubro de 2025): Simulados
+- **Segunda, 06/10**  
+  **Objetivo**: Repetir Simulado 2 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 2 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Terça, 07/10**  
+  **Objetivo**: Repetir Simulado 2 Maarek.  
+  **Tarefa**: Refaça o Simulado 2 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 08/10**  
+  **Objetivo**: Repetir Simulado 3 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 3 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quinta, 09/10**  
+  **Objetivo**: Repetir Simulado 3 Maarek.  
+  **Tarefa**: Refaça o Simulado 3 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Sexta, 10/10**  
+  **Objetivo**: Revisar tópicos fracos.  
+  **Tarefa**: Identifique tópicos fracos nos simulados (20 min). Estude esses tópicos no curso de Maarek (40 min).  
+  **Entregável**: Tópicos fracos revisados.  
+
+### Semana 13 (13 a 17 de outubro de 2025): Simulados
+- **Segunda, 13/10**  
+  **Objetivo**: Repetir Simulado 4 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 4 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Terça, 14/10**  
+  **Objetivo**: Repetir Simulado 4 Maarek.  
+  **Tarefa**: Refaça o Simulado 4 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 15/10**  
+  **Objetivo**: Repetir Simulado 5 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 5 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quinta, 16/10**  
+  **Objetivo**: Repetir Simulado 5 Maarek.  
+  **Tarefa**: Refaça o Simulado 5 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Sexta, 17/10**  
+  **Objetivo**: Revisar tópicos fracos.  
+  **Tarefa**: Identifique tópicos fracos nos simulados (20 min). Estude esses tópicos no curso de Maarek (40 min).  
+  **Entregável**: Tópicos fracos revisados.  
+
+### Semana 14 (20 a 24 de outubro de 2025): Simulados
+- **Segunda, 20/10**  
+  **Objetivo**: Repetir Simulado 1 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 1 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Terça, 21/10**  
+  **Objetivo**: Repetir Simulado 1 Maarek.  
+  **Tarefa**: Refaça o Simulado 1 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 22/10**  
+  **Objetivo**: Repetir Simulado 2 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 2 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quinta, 23/10**  
+  **Objetivo**: Repetir Simulado 2 Maarek.  
+  **Tarefa**: Refaça o Simulado 2 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Sexta, 24/10**  
+  **Objetivo**: Revisar tópicos fracos.  
+  **Tarefa**: Identifique tópicos fracos nos simulados (20 min). Estude esses tópicos no curso de Maarek (40 min).  
+  **Entregável**: Tópicos fracos revisados.  
+
+### Semana 15 (27 a 31 de outubro de 2025): Simulados
+- **Segunda, 27/10**  
+  **Objetivo**: Repetir Simulado 3 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 3 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Terça, 28/10**  
+  **Objetivo**: Repetir Simulado 3 Maarek.  
+  **Tarefa**: Refaça o Simulado 3 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 29/10**  
+  **Objetivo**: Repetir Simulado 4 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 4 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quinta, 30/10**  
+  **Objetivo**: Repetir Simulado 4 Maarek.  
+  **Tarefa**: Refaça o Simulado 4 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Sexta, 31/10**  
+  **Objetivo**: Revisar tópicos fracos.  
+  **Tarefa**: Identifique tópicos fracos nos simulados (20 min). Estude esses tópicos no curso de Maarek (40 min).  
+  **Entregável**: Tópicos fracos revisados.  
+
+### Semana 16 (3 a 7 de novembro de 2025): Simulados
+- **Segunda, 03/11**  
+  **Objetivo**: Repetir Simulado 5 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 5 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Terça, 04/11**  
+  **Objetivo**: Repetir Simulado 5 Maarek.  
+  **Tarefa**: Refaça o Simulado 5 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 05/11**  
+  **Objetivo**: Repetir Simulado 1 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 1 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quinta, 06/11**  
+  **Objetivo**: Repetir Simulado 1 Maarek.  
+  **Tarefa**: Refaça o Simulado 1 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Sexta, 07/11**  
+  **Objetivo**: Revisar tópicos fracos.  
+  **Tarefa**: Identifique tópicos fracos nos simulados (20 min). Estude esses tópicos no curso de Maarek (40 min).  
+  **Entregável**: Tópicos fracos revisados.  
+
+### Semana 17 (10 a 14 de novembro de 2025): Simulados
+- **Segunda, 10/11**  
+  **Objetivo**: Repetir Simulado 2 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 2 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Terça, 11/11**  
+  **Objetivo**: Repetir Simulado 2 Maarek.  
+  **Tarefa**: Refaça o Simulado 2 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 12/11**  
+  **Objetivo**: Repetir Simulado 3 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 3 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quinta, 13/11**  
+  **Objetivo**: Repetir Simulado 3 Maarek.  
+  **Tarefa**: Refaça o Simulado 3 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Sexta, 14/11**  
+  **Objetivo**: Revisar tópicos fracos.  
+  **Tarefa**: Identifique tópicos fracos nos simulados (20 min). Estude esses tópicos no curso de Maarek (40 min).  
+  **Entregável**: Tópicos fracos revisados.  
+
+### Semana 18 (17 a 21 de novembro de 2025): Simulados
+- **Segunda, 17/11**  
+  **Objetivo**: Repetir Simulado 4 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 4 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Terça, 18/11**  
+  **Objetivo**: Repetir Simulado 4 Maarek.  
+  **Tarefa**: Refaça o Simulado 4 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 19/11**  
+  **Objetivo**: Repetir Simulado 5 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 5 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quinta, 20/11**  
+  **Objetivo**: Repetir Simulado 5 Maarek.  
+  **Tarefa**: Refaça o Simulado 5 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Sexta, 21/11**  
+  **Objetivo**: Revisar tópicos fracos.  
+  **Tarefa**: Identifique tópicos fracos nos simulados (20 min). Estude esses tópicos no curso de Maarek (40 min).  
+  **Entregável**: Tópicos fracos revisados.  
+
+### Semana 19 (24 a 28 de novembro de 2025): Preparação Final
+- **Segunda, 24/11**  
+  **Objetivo**: Revisar Projeto Amigas na Estrada.  
+  **Tarefa**: Revise anotações do projeto (20 min). Teste todos os endpoints via Postman (40 min).  
+  **Entregável**: Projeto revisado.  
+
+- **Terça, 25/11**  
+  **Objetivo**: Repetir Simulado 1 Tutorials Dojo.  
+  **Tarefa**: Refaça o Simulado 1 de Tutorials Dojo (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quarta, 26/11**  
+  **Objetivo**: Repetir Simulado 1 Maarek.  
+  **Tarefa**: Refaça o Simulado 1 de Maarek (40 min). Analise erros e revise tópicos no curso de Maarek (20 min).  
+  **Entregável**: Simulado concluído, erros revisados.  
+
+- **Quinta, 27/11**  
+  **Objetivo**: Revisão final.  
+  **Tarefa**: Revise o Guia do Exame da AWS (20 min, https://d1.awsstatic.com/training-and-certification/docs-dev-associate/AWS-Certified-Developer-Associate_Exam-Guide.pdf). Faça 10 questões de cada simulado (Tutorials Dojo, Maarek) (40 min).  
+  **Entregável**: Revisão finalizada.  
+
+- **Sexta, 28/11**  
+  **Objetivo**: Descanso e preparação mental.  
+  **Tarefa**: Revise anotações leves (20 min). Descanse e prepare-se para o exame (40 min).  
+  **Entregável**: Preparação mental concluída.  
+
+## Dicas Finais
+- **Ambiente AWS**: Monitore custos no AWS Budgets. Exclua recursos após o projeto para evitar encargos.  
+- **Simulados**: Continue refazendo simulados até atingir uma pontuação consistente (recomendado: ≥80% em cada simulado). Anote tópicos fracos (ex.: KMS, X-Ray) e revise-os prioritariamente.  
+- **Projeto**: Mantenha o código do Projeto Amigas na Estrada em um repositório Git (local ou GitHub). Exemplo: `git commit -m "Projeto Amigas na Estrada concluído"`.  
+- **Prova**: Confirme o exame para 28 de novembro de 2025 via Pearson VUE. Escolha o idioma português, mas consulte termos técnicos em inglês se necessário.  
+- **Descanso**: Reserve o fim de semana antes da prova (22-23/11) para descansar e revisar anotações leves.  
+- **Exportação**: Para transferir este cronograma, salve como `aws-developer-study-plan.md`. Copie para um USB, envie por e-mail ou publique no GitHub. Use um editor Markdown ou converta para PDF com Pandoc.
 
-**2. List (L)**
-
-* Representa uma lista ordenada de valores.
-* Pode conter itens de qualquer tipo de dado suportado pelo DynamoDB.
-* Exemplo:
-
-```json
-[
-  {"S": "Apple"},
-  {"N": "123"},
-  {"BOOL": true}
-]
-```
-
-### Tipos de Conjunto (Set Types)
-
-Os tipos de conjunto permitem armazenar coleções não ordenadas de valores únicos. DynamoDB suporta três tipos de conjunto:
-
-**1. String Set (SS)**
-
-* Representa um conjunto de strings.
-* Exemplo:
-  
-``` json
-["Apple", "Orange", "Banana"]
-```
-
-**2. Number Set (NS)**
-
-* Representa um conjunto de números.
-* Exemplo:
-
-```json
-[1, 2, 3, 4.5]
-```
-
-**3. Binary Set (BS)**
-
-* Representa um conjunto de dados binários.
-* Exemplo:
-  
-`
-[b'\x01', b'\x02', b'\x03']
-`
-
-**Resumo**
-
-DynamoDB oferece uma variedade de tipos de dados para suportar diferentes necessidades de armazenamento e modelagem de dados:
-
-* **Tipos Escalares:** Strings, Números, Binários, Booleanos, Nulos.
-* **Tipos de Documento:** Mapas (objetos), Listas.
-* **Tipos de Conjunto:** Conjuntos de Strings, Números, Binários.
-
-Essa diversidade permite que os desenvolvedores escolham o tipo de dado mais apropriado para suas necessidades, garantindo uma estrutura de dados eficiente e flexível para suas aplicações.
-
-## Chave de Partição (Partition Key)
-A chave de partição é um identificador único que determina a partição na qual o item será armazenado. Esta chave é obrigatória e deve ser exclusiva para cada item em uma tabela que usa apenas uma chave de partição (tabela de chave simples). A escolha da chave de partição é importante para distribuir uniformemente os dados e a carga de tráfego entre as partições.
-
-# Exemplo de Chave de Partição
-Imagine uma tabela chamada Users que armazena informações sobre usuários, onde cada usuário é identificado exclusivamente pelo seu `UserID`.
-
-| UserID        | Name     | Email |
-| ------|-----|-----|
-| 12345  	| Alice 	| alice@example.com	|
-| 67890  	| Bob 	| bob@example.com 	|
-| 11223 	| Carol 	| carol@example.com 	|
-
-Neste caso, o `UserID` é a chave de partição. Cada item (ou linha) da tabela Users é identificado unicamente pelo `UserID`.
-
-## Chave de Partição e Chave de Classificação (Partition Key and Sort Key)
-Quando uma tabela tem uma chave de classificação, ela se torna uma tabela composta, permitindo múltiplos itens com a mesma chave de partição, desde que tenham chaves de classificação diferentes. A chave de classificação permite ordenar e buscar itens dentro da mesma partição.
-
-### Exemplo de Chave de Partição e Chave de Classificação
-Considere uma tabela chamada `Orders` que armazena informações sobre pedidos, onde cada pedido é identificado por um `OrderID` e pertence a um cliente identificado por `CustomerID`.
-
-| CostumerID        | OrderID     | OrderDate | Amount | 
-| ------|-----|-----| -----|
-| 123  	| 001 	| 2023-05-01| $250 | 
-| 123 	| 002 	| 2023-05-03 	| $450 | 
-| 456 	| 003 	| 2023-05-02 	| $150 | 
-| 456 	| 004 	| 2023-05-04	| $200 | 
-
-Neste caso, `CustomerID` é a chave de partição e `OrderID` é a chave de classificação. Isso significa que os pedidos são organizados primeiro por `CustomerID` e, dentro de cada `CustomerID`, são classificados pelo `OrderID`.
-
-## Consultas e Vantagens
-* **Chave de Partição Única:** Consultas com base na chave de partição são rápidas e eficientes, pois o DynamoDB sabe exatamente em qual partição procurar.
-
-**Exemplo de consulta:**
-
-```python
-response = table.get_item(Key={'UserID': '12345'})
-```
-
-
-* **Chave de Partição e Classificação:** Consultas podem filtrar e ordenar itens dentro da mesma partição, tornando-as mais flexíveis.
-
-**Exemplo de consulta:**
-```python
-response = table.query(
-    KeyConditionExpression=Key('CustomerID').eq('123') & Key('OrderID').begins_with('00')
-)
-```
-
-## Características Avançadas
-
-* **Escalabilidade Automática:** DynamoDB ajusta automaticamente a capacidade de leitura e escrita da tabela para acomodar mudanças de tráfego.
-* **Consistência:** Oferece consistência eventual e consistência forte nas leituras.
-* **Streams:** DynamoDB Streams captura uma sequência de mudanças em uma tabela, permitindo processamentos de eventos em tempo real.
-* **Transações:** Permite realizar operações atômicas em múltiplos itens em uma ou mais tabelas.
-* **Segurança:** Integração com AWS Identity and Access Management (IAM) para controle de acesso e criptografia de dados em trânsito e em repouso.
-
-## Modelos de consistência de leitura
-
-O DynamoDB, um serviço de banco de dados NoSQL gerenciado pela AWS, oferece dois modelos de consistência de leitura para garantir a integridade dos dados: a leitura fortemente consistente (strongly consistent read) e a leitura eventualmente consistente (eventually consistent read). Esses modelos diferem em termos de desempenho, custo e garantias de consistência dos dados.
-
-### Leitura Eventualmente Consistente
-A leitura eventualmente consistente é o padrão no DynamoDB e é a mais usada por causa de seu melhor desempenho e menor custo em comparação com a leitura fortemente consistente. Nesse modelo, quando uma leitura é realizada, a resposta pode não refletir imediatamente o resultado de uma operação de escrita recente. No entanto, os dados eventualmente se tornam consistentes em um curto período de tempo (normalmente dentro de um segundo).
-
-#### Características:
-* **Performance:** Maior throughput e menor latência.
-* **Custo:** Menor custo de leitura em termos de unidades de leitura.
-* **Consistência:** Pode retornar dados desatualizados se uma gravação recente foi realizada.
-
-### Leitura Fortemente Consistente
-A leitura fortemente consistente garante que uma leitura reflete o resultado de todas as gravações que receberam uma confirmação bem-sucedida antes da leitura. Ou seja, uma leitura fortemente consistente sempre retorna os dados mais atualizados e confirmados.
-
-#### Características:
-* **Performance: Menor throughput e maior latência em comparação com a leitura eventualmente consistente.
-* **Custo: Maior custo de leitura em termos de unidades de leitura.
-* **Consistência: Garante a leitura dos dados mais recentes e confirmados.
-  
-### Comparação dos Modelos
-| Característica | Leitura Eventualmente Consistente |	Leitura Fortemente Consistente
-| ------|-----|-----|
-Performance |	Maior throughput, menor latência |	Menor throughput, maior latência |
-Custo	| Menor	| Maior |
-Consistência |	Pode ser desatualizada |	Sempre atualizada
-Uso típico |	Aplicações que podem tolerar dados levemente desatualizados |	Aplicações que precisam de dados sempre consistentes |
-
-### Considerações Práticas
-
-* **Escolha de Consistência:** A escolha entre esses modelos deve ser baseada nos requisitos específicos de sua aplicação. Se a aplicação pode tolerar leituras que não estão imediatamente atualizadas (como em muitos cenários de análise de dados, dashboards, etc.), a leitura eventualmente consistente é mais adequada. No entanto, se a aplicação exige que as leituras reflitam as últimas gravações confirmadas (como em sistemas de transações financeiras, inventário em tempo real, etc.), a leitura fortemente consistente é a melhor opção.
-
-* **Custo e Desempenho:** Em sistemas de alta carga, optar por leituras eventualmente consistentes pode resultar em economias significativas e maior desempenho, enquanto a leitura fortemente consistente, embora mais cara, oferece a garantia necessária para aplicações críticas.
-
-### Exemplo de Uso
-Ao configurar uma operação de leitura no DynamoDB, a escolha do modelo de consistência pode ser feita especificando o parâmetro ConsistentRead na API de leitura do DynamoDB. Por exemplo:
-
-```python
-import boto3
-
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('MinhaTabela')
-
-# Leitura eventualmente consistente
-response = table.get_item(
-    Key={'MeuID': '123'}
-)
-
-# Leitura fortemente consistente
-response = table.get_item(
-    Key={'MeuID': '123'},
-    ConsistentRead=True
-)
-```
-
-### Conclusão
-O DynamoDB oferece flexibilidade com seus modelos de consistência, permitindo que os desenvolvedores escolham entre leitura eventualmente consistente e leitura fortemente consistente conforme as necessidades específicas de suas aplicações. Essa flexibilidade ajuda a equilibrar a necessidade de desempenho, custo e integridade dos dados em diferentes cenários de uso.
-
-
-## Transações no DynamoDB
-
-As transações no DynamoDB são uma funcionalidade avançada que permite a execução de operações atômicas em múltiplos itens em uma ou mais tabelas do DynamoDB. Elas garantem que todas as operações em uma transação sejam bem-sucedidas ou nenhuma delas seja aplicada, proporcionando uma maneira robusta de manter a consistência dos dados em cenários complexos.
-
-### Características das Transações no DynamoDB
-
-1. **Atomicidade:** Todas as operações dentro de uma transação são atômicas. Isso significa que ou todas as operações são bem-sucedidas, ou nenhuma delas é aplicada. Isso é crucial para manter a consistência dos dados em aplicações complexas.
-
-2. **Isolamento:** As transações são isoladas, o que garante que outras operações de leitura e gravação não possam interferir com uma transação em andamento. Isso proporciona uma visão consistente dos dados enquanto a transação está sendo processada.
-
-3. **Consistência:** As transações no DynamoDB garantem consistência forte, assegurando que todas as leituras realizadas durante a transação reflitam todas as gravações que foram feitas com sucesso dentro dessa transação.
-
-4. **Suporte a múltiplas tabelas:** É possível realizar operações em múltiplas tabelas dentro de uma única transação, oferecendo flexibilidade para manter a consistência dos dados em diferentes partes do seu banco de dados.
-
-### Operações Transacionais
-O DynamoDB suporta duas operações principais para transações: `TransactWriteItems` e `TransactGetItems`.
-
-#### TransactWriteItems
-Essa operação permite executar múltiplas operações de escrita em uma única transação. As operações suportadas incluem:
-
-`Put`: Adicionar um novo item ou substituir um item existente.
-`Update`: Atualizar um item existente.
-`Delete`: Excluir um item.
-`ConditionCheck`: Verificar se uma condição é verdadeira antes de executar uma operação de escrita.
-
-Exemplo de uso do `TransactWriteItems`:
-
-```python
-import boto3
-
-dynamodb = boto3.client('dynamodb')
-
-response = dynamodb.transact_write_items(
-    TransactItems=[
-        {
-            'Put': {
-                'TableName': 'MinhaTabela',
-                'Item': {
-                    'PK': {'S': 'Chave1'},
-                    'Atributo1': {'S': 'Valor1'}
-                }
-            }
-        },
-        {
-            'Update': {
-                'TableName': 'OutraTabela',
-                'Key': {
-                    'PK': {'S': 'Chave2'}
-                },
-                'UpdateExpression': 'SET Atributo2 = :val',
-                'ExpressionAttributeValues': {
-                    ':val': {'S': 'NovoValor'}
-                }
-            }
-        }
-    ]
-)
-```
-
-#### TransactGetItems
-Essa operação permite ler múltiplos itens de uma ou mais tabelas dentro de uma única transação, garantindo que as leituras são consistentes e refletindo as gravações feitas dentro da mesma transação.
-
-Exemplo de uso do `TransactGetItems`:
-
-```python
-response = dynamodb.transact_get_items(
-    TransactItems=[
-        {
-            'Get': {
-                'TableName': 'MinhaTabela',
-                'Key': {
-                    'PK': {'S': 'Chave1'}
-                }
-            }
-        },
-        {
-            'Get': {
-                'TableName': 'OutraTabela',
-                'Key': {
-                    'PK': {'S': 'Chave2'}
-                }
-            }
-        }
-    ]
-)
-```
-
-### Limitações e Considerações
-* **Tamanho da Transação:** Cada transação pode conter até 25 operações de leitura ou escrita e até 4 MB de dados.
-* **Consumo de Recursos:** Operações transacionais consomem mais unidades de capacidade de leitura e escrita em comparação com operações não transacionais.
-* **Desempenho:** As transações podem introduzir uma latência adicional devido à complexidade de garantir atomicidade e consistência.
-
-### Uso Comum
-As transações no DynamoDB são úteis em cenários onde a consistência dos dados é crítica, como:
-
-* Processamento de pagamentos
-* Gerenciamento de inventário
-* Aplicações de reserva de recursos
-* Cenários de manutenção de integridade referencial entre tabelas
-
-### Conclusão
-As transações no DynamoDB fornecem uma poderosa ferramenta para garantir a consistência e integridade dos dados em operações complexas. Elas são especialmente úteis em aplicações onde operações atômicas e consistência forte são necessárias, oferecendo flexibilidade para lidar com múltiplos itens e tabelas dentro de uma única operação transacional.
-
-
-## Desempenho e Throttling no DynamoDB
-
-O desempenho e o gerenciamento de throttling no DynamoDB são aspectos cruciais para garantir que suas aplicações funcionem de maneira eficiente e confiável. Vamos explorar esses conceitos em detalhes.
-
-### Desempenho no DynamoDB
-
-#### Throughput Consistente
-O DynamoDB é projetado para fornecer desempenho previsível e consistente em qualquer escala. Com capacidade provisionada, você especifica a quantidade de throughput necessária em termos de unidades de capacidade de leitura (RCU) e escrita (WCU). Com isso, a AWS garante que você terá a capacidade provisionada disponível para suas operações.
-
-#### Latência Baixa
-O DynamoDB é otimizado para operações de baixa latência, geralmente em milissegundos. Mesmo com grandes volumes de dados e altas taxas de solicitações, o DynamoDB mantém a latência baixa, o que é crítico para aplicações em tempo real.
-
-#### Escalabilidade
-O DynamoDB pode escalar automaticamente para lidar com picos de tráfego usando o recurso de auto scaling. Isso garante que as tabelas possam aumentar ou diminuir a capacidade de leitura e escrita conforme a demanda muda, sem intervenção manual.
-
-### Throttling no DynamoDB
-
-#### Conceito de Throttling
-O throttling ocorre quando a taxa de solicitações excede a capacidade provisionada para leitura ou escrita. Quando isso acontece, o DynamoDB rejeita as solicitações adicionais, retornando erros de throughput excedido (HTTP 400). Throttling é uma medida de proteção para garantir que as tabelas do DynamoDB não sejam sobrecarregadas e possam manter um desempenho consistente.
-
-#### Razões para Throttling
-
-* **Capacidade Insuficiente:** A capacidade provisionada (RCUs e WCUs) não é suficiente para lidar com a carga atual.
-* **Acessos Desiguais:** Padrões de acesso altamente desiguais, onde algumas chaves de partição são acessadas com muito mais frequência que outras (hot keys).
-* **Operações em Lote:** Grandes operações em lote que excedem a capacidade de uma só vez.
-
-### Mitigando Throttling
-
-#### Monitoramento
-Utilize o Amazon CloudWatch para monitorar métricas como `ConsumedReadCapacityUnits`, `ConsumedWriteCapacityUnits`, `ThrottledRequests`, e `ProvisionedThroughputExceeded`. Isso ajuda a identificar quando e onde o throttling está ocorrendo.
-
-#### Auto Scaling
-Configurar auto scaling para ajustar automaticamente a capacidade provisionada com base na utilização real pode ajudar a evitar throttling. Defina políticas de auto scaling que aumentem a capacidade quando a utilização atinge um certo limiar e reduza quando a demanda diminui.
-
-#### Design de Partição
-Projetar a tabela com uma chave de partição que distribua uniformemente a carga entre as partições. Isso evita hot keys e ajuda a manter o throughput distribuído de maneira uniforme.
-
-#### Operações de Leitura/Escrita Otimizadas
-
-* **Batch Operations:** Dividir operações em lote em partes menores para distribuir a carga.
-* **Exponential Backoff:** Implementar lógica de retry com backoff exponencial para operações que falham devido a throttling. Isso ajuda a reduzir a carga imediata e espalhar as solicitações ao longo do tempo.
-
-### Exemplo de Monitoramento e Auto Scaling
-#### Monitoramento com CloudWatch:
-
-```python
-import boto3
-
-cloudwatch = boto3.client('cloudwatch')
-
-response = cloudwatch.get_metric_statistics(
-    Namespace='AWS/DynamoDB',
-    MetricName='ThrottledRequests',
-    Dimensions=[
-        {
-            'Name': 'TableName',
-            'Value': 'MinhaTabela'
-        },
-    ],
-    StartTime=datetime.utcnow() - timedelta(minutes=5),
-    EndTime=datetime.utcnow(),
-    Period=60,
-    Statistics=['Sum']
-)
-
-for point in response['Datapoints']:
-    print(f"Time: {point['Timestamp']}, Throttled Requests: {point['Sum']}")
-```
-
-#### Configuração de Auto Scaling:
-
-```python
-import boto3
-
-application_autoscaling = boto3.client('application-autoscaling')
-
-response = application_autoscaling.register_scalable_target(
-    ServiceNamespace='dynamodb',
-    ResourceId='table/MinhaTabela',
-    ScalableDimension='dynamodb:table:ReadCapacityUnits',
-    MinCapacity=5,
-    MaxCapacity=50
-)
-
-response = application_autoscaling.put_scaling_policy(
-    PolicyName='MinhaTabelaReadAutoScalingPolicy',
-    ServiceNamespace='dynamodb',
-    ResourceId='table/MinhaTabela',
-    ScalableDimension='dynamodb:table:ReadCapacityUnits',
-    PolicyType='TargetTrackingScaling',
-    TargetTrackingScalingPolicyConfiguration={
-        'TargetValue': 70.0,
-        'PredefinedMetricSpecification': {
-            'PredefinedMetricType': 'DynamoDBReadCapacityUtilization'
-        },
-        'ScaleInCooldown': 60,
-        'ScaleOutCooldown': 60
-    }
-)
-```
-
-### Conclusão
-Entender e gerenciar o desempenho e throttling no DynamoDB é essencial para manter suas aplicações rodando de maneira eficiente e econômica. Ao usar monitoramento, auto scaling, e boas práticas de design de tabelas, você pode minimizar o impacto do throttling e garantir um desempenho consistente e previsível.
-
-## Operações de leitura `Query` e `Scan`
-No DynamoDB, as operações de leitura podem ser realizadas principalmente usando os métodos Query e Scan. Ambos têm propósitos distintos e são usados em diferentes cenários, dependendo das necessidades da aplicação. A seguir, vamos explorar cada um deles e destacar suas principais diferenças.
-
-### Operação Query
-A operação `Query` é usada para encontrar itens em uma tabela do DynamoDB usando apenas a chave de partição (e opcionalmente a chave de classificação, se existir). Essa operação é mais eficiente porque usa índices para buscar diretamente os itens, resultando em menor consumo de recursos e latência.
-
-#### Características do Query:
-
-* **Chave de Partição:** A Query requer que você especifique a chave de partição. Você pode filtrar adicionalmente por chave de classificação se a tabela usar uma chave de classificação composta.
-* **Filtros:** Pode aplicar condições adicionais usando a expressão KeyConditionExpression para a chave de classificação e FilterExpression para outros atributos.
-* **Eficiência:** Mais eficiente em termos de desempenho e custo, pois usa índices para acessar diretamente os itens.
-* **Ordenação:** Suporta ordenação dos resultados com base na chave de classificação (ascendente ou descendente).
-
-#### Exemplo de Query:
-
-```python
-import boto3
-
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('MinhaTabela')
-
-response = table.query(
-    KeyConditionExpression=Key('UserId').eq('1234') & Key('Timestamp').between('2023-01-01', '2023-01-31')
-)
-
-for item in response['Items']:
-    print(item)
-```
-
-### Operação Scan
-
-A operação `Scan` é usada para examinar todos os itens de uma tabela ou de um índice secundário global. `Scan` lê cada item na tabela e aplica quaisquer filtros especificados, o que pode resultar em alto consumo de recursos, especialmente para grandes tabelas.
-
-#### Características do Scan:
-* **Examina todos os itens:** A Scan examina todos os itens em uma tabela ou índice, independentemente da chave de partição.
-* **Filtros:** Pode aplicar filtros com FilterExpression para retornar apenas itens que correspondam aos critérios especificados.
-* **Consumo de Recursos:** Menos eficiente em termos de desempenho e custo, pois precisa ler todos os itens na tabela, potencialmente consumindo muitas unidades de capacidade de leitura (RCUs).
-* **Uso de Paginação:** Em tabelas grandes, a operação Scan pode ser paginada para limitar a quantidade de dados processados em uma única operação.
-  
-#### Exemplo de Scan:
-
-```python
-import boto3
-
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('MinhaTabela')
-
-response = table.scan(
-    FilterExpression=Attr('Status').eq('Active')
-)
-
-for item in response['Items']:
-    print(item)
-```
-
-### Comparação entre Query e Scan
-| Característica |	Query |	Scan |
-| ------|-----|-----|
-| Eficiência |	Alta (usa índices) |	Baixa (lê todos os itens) |
-| Uso de Índices	| Sim |	Não |
-| Chave de Partição |	Requerida |	Não é necessária |
-| Filtros | Suporta `KeyConditionExpression` e `FilterExpression`	| Suporta apenas `FilterExpression`|
-| Latência |	Baixa	| Alta |
-| Consumo de RCUs |	Baixo (eficiente)	| Alto (ineficiente) |
-| Ordenação |	Suporta ordenação pela chave de classificação |	Não suporta ordenação| 
-| Aplicação Típica |	Buscar itens específicos com base na chave de partição e classificação | Ler todos os itens de uma tabela, aplicar filtros |
-
-### Quando Usar Cada Operação
-
-#### Use `Query` quando:
-* Você sabe a chave de partição dos itens que deseja buscar.
-* Deseja obter resultados de maneira eficiente e rápida.
-* Precisa ordenar os resultados ou fazer consultas complexas com base na chave de classificação.
-
-#### Use `Scan` quando:
-* Precisa ler todos os itens de uma tabela para análise completa.
-* Está fazendo operações de manutenção ou migração de dados.
-* Não tem uma chave de partição específica para suas consultas.
-
-#### Conclusão
-Entender as diferenças entre `Query` e `Scan` no DynamoDB é essencial para otimizar o desempenho e o custo de suas operações de leitura. `Query`  é a escolha preferida para acessos rápidos e eficientes quando se conhece a chave de partição, enquanto `Scan` é usado em cenários onde uma varredura completa da tabela é necessária. Escolher a operação correta pode fazer uma grande diferença na eficiência e escalabilidade de sua aplicação.
-
-## DynamoDB - Índices
-
-No DynamoDB, os índices são utilizados para melhorar a eficiência das consultas e fornecer maneiras alternativas de acessar os dados. Existem dois tipos principais de índices: Local Secondary Index (LSI) e Global Secondary Index (GSI). Vamos explorar cada um deles em detalhes.
-
-### Local Secondary Index (LSI)
-Um Local Secondary Index (LSI) é um índice alternativo que você pode definir para uma tabela no DynamoDB e que usa a mesma chave de partição que a tabela principal, mas permite a criação de uma chave de classificação diferente. Os LSIs são definidos no momento da criação da tabela.
-
-#### Características do LSI:
-
-**1. Chave de Partição:**
-
-* Utiliza a mesma chave de partição que a tabela principal.
-
-**2. Chave de Classificação:**
-
-* Permite definir uma chave de classificação diferente.
-  
-**3. Consistência de Dados:**
-
-* Oferece leituras fortemente consistentes, além de leituras eventualmente consistentes.
-
-**4. Tamanho Máximo:**
-
-* A tabela e todos os seus LSIs juntos não podem exceder 10 GB por chave de partição.
-
-**5. Uso Típico:**
-
-* Utilizado para criar consultas eficientes que exigem diferentes chaves de classificação, mantendo a mesma chave de partição.
-
-#### Exemplo de LSI:
-
-```python
-import boto3
-
-dynamodb = boto3.resource('dynamodb')
-
-table = dynamodb.create_table(
-    TableName='MinhaTabela',
-    KeySchema=[
-        {
-            'AttributeName': 'UserId',
-            'KeyType': 'HASH'  # Chave de Partição
-        },
-        {
-            'AttributeName': 'Timestamp',
-            'KeyType': 'RANGE'  # Chave de Classificação
-        }
-    ],
-    AttributeDefinitions=[
-        {
-            'AttributeName': 'UserId',
-            'AttributeType': 'S'
-        },
-        {
-            'AttributeName': 'Timestamp',
-            'AttributeType': 'N'
-        },
-        {
-            'AttributeName': 'Status',
-            'AttributeType': 'S'
-        }
-    ],
-    LocalSecondaryIndexes=[
-        {
-            'IndexName': 'StatusIndex',
-            'KeySchema': [
-                {
-                    'AttributeName': 'UserId',
-                    'KeyType': 'HASH'
-                },
-                {
-                    'AttributeName': 'Status',
-                    'KeyType': 'RANGE'
-                }
-            ],
-            'Projection': {
-                'ProjectionType': 'ALL'  # Inclui todos os atributos
-            }
-        }
-    ],
-    ProvisionedThroughput={
-        'ReadCapacityUnits': 5,
-        'WriteCapacityUnits': 5
-    }
-)
-```
-
-### Global Secondary Index (GSI)
-Um Global Secondary Index (GSI) é um índice alternativo que pode usar uma chave de partição e uma chave de classificação diferentes daquelas usadas na tabela principal. Os GSIs podem ser adicionados a qualquer momento após a criação da tabela.
-
-#### Características do GSI:
-
-**1.Chave de Partição:**
-* Pode usar uma chave de partição diferente da tabela principal.
-  
-**2.Chave de Classificação:**
-* Pode usar uma chave de classificação diferente da tabela principal.
-
-**3.Consistência de Dados:**
-* Suporta apenas leituras eventualmente consistentes.
-
-**4.Capacidade Independente:**
-* A capacidade de leitura e escrita do GSI é provisionada separadamente da tabela principal.
-
-**5.Uso Típico:**
-* Utilizado para consultas que requerem acesso rápido e eficiente com base em diferentes atributos.
-  
-#### Exemplo de GSI:
-
-```python
-import boto3
-
-dynamodb = boto3.resource('dynamodb')
-
-table = dynamodb.create_table(
-    TableName='MinhaTabela',
-    KeySchema=[
-        {
-            'AttributeName': 'UserId',
-            'KeyType': 'HASH'  # Chave de Partição
-        },
-        {
-            'AttributeName': 'Timestamp',
-            'KeyType': 'RANGE'  # Chave de Classificação
-        }
-    ],
-    AttributeDefinitions=[
-        {
-            'AttributeName': 'UserId',
-            'AttributeType': 'S'
-        },
-        {
-            'AttributeName': 'Timestamp',
-            'AttributeType': 'N'
-        },
-        {
-            'AttributeName': 'Email',
-            'AttributeType': 'S'
-        }
-    ],
-    GlobalSecondaryIndexes=[
-        {
-            'IndexName': 'EmailIndex',
-            'KeySchema': [
-                {
-                    'AttributeName': 'Email',
-                    'KeyType': 'HASH'
-                },
-                {
-                    'AttributeName': 'Timestamp',
-                    'KeyType': 'RANGE'
-                }
-            ],
-            'Projection': {
-                'ProjectionType': 'ALL'  # Inclui todos os atributos
-            },
-            'ProvisionedThroughput': {
-                'ReadCapacityUnits': 10,
-                'WriteCapacityUnits': 10
-            }
-        }
-    ],
-    ProvisionedThroughput={
-        'ReadCapacityUnits': 5,
-        'WriteCapacityUnits': 5
-    }
-)
-```
-
-### Diferenças entre LSI e GSI
-
-| Característica |	LSI |	GSI |
-| ------|-----|-----|
-| Chave de Partição |	Igual à tabela principal |	Diferente da tabela principal |
-| Chave de Classificação |	Diferente da tabela | principal	Diferente da tabela principal |
-| Leitura Consistente |	Suporta leitura fortemente consistente |	Apenas leitura eventualmente consistente |
-| Capacidade de Acesso |	Compartilhada com a tabela principal |	Provisionada separadamente |
-| Limitação de Tamanho |	10 GB por chave de partição |	Sem limitação específica |
-| Criação |	No momento da criação da tabela |	Pode ser criado a qualquer momento |
-| Aplicação Típica |	Acesso com a mesma chave de partição, mas diferentes chaves de classificação |	Acesso com diferentes chaves de partição e classificação |
-
-### Conclusão
-Os índices no DynamoDB, LSI e GSI, oferecem flexibilidade para otimizar consultas e acessar dados de diferentes maneiras. LSIs são úteis para consultas que exigem diferentes chaves de classificação mantendo a mesma chave de partição, enquanto GSIs permitem a criação de índices completamente independentes, usando diferentes chaves de partição e classificação, proporcionando maior flexibilidade para consultas complexas e escaláveis. A escolha entre LSI e GSI depende dos requisitos específicos de desempenho, consistência e acesso aos dados da sua aplicação.
-
-
-## Exemplos Práticos de Quando Usar LSI e GSI
-Para entender melhor quando usar Local Secondary Index (LSI) e Global Secondary Index (GSI) no DynamoDB, vamos explorar alguns exemplos práticos.
-
-### Exemplo de Uso de LSI
-**Cenário:** Uma aplicação de blog onde os usuários podem criar posts e queremos consultar os posts por data e por status (publicado, rascunho, etc.) para um usuário específico.
-
-**Tabela Principal:**
-
-* **Tabela:** BlogPosts
-* **Chave de Partição:** UserId (ID do usuário)
-* **Chave de Classificação:** PostDate (Data da publicação)
-
-**Necessidade:** Consultar todos os posts de um usuário em ordem cronológica e também filtrar posts pelo status (publicado, rascunho, etc.).
-
-**Solução:** Usar um LSI para permitir consultas com base em um atributo adicional Status.
-
-#### Definição da Tabela com LSI:
-
-```python
-import boto3
-
-dynamodb = boto3.resource('dynamodb')
-
-table = dynamodb.create_table(
-    TableName='BlogPosts',
-    KeySchema=[
-        {
-            'AttributeName': 'UserId',
-            'KeyType': 'HASH'  # Chave de Partição
-        },
-        {
-            'AttributeName': 'PostDate',
-            'KeyType': 'RANGE'  # Chave de Classificação
-        }
-    ],
-    AttributeDefinitions=[
-        {
-            'AttributeName': 'UserId',
-            'AttributeType': 'S'
-        },
-        {
-            'AttributeName': 'PostDate',
-            'AttributeType': 'S'
-        },
-        {
-            'AttributeName': 'Status',
-            'AttributeType': 'S'
-        }
-    ],
-    LocalSecondaryIndexes=[
-        {
-            'IndexName': 'StatusIndex',
-            'KeySchema': [
-                {
-                    'AttributeName': 'UserId',
-                    'KeyType': 'HASH'
-                },
-                {
-                    'AttributeName': 'Status',
-                    'KeyType': 'RANGE'
-                }
-            ],
-            'Projection': {
-                'ProjectionType': 'ALL'  # Inclui todos os atributos
-            }
-        }
-    ],
-    ProvisionedThroughput={
-        'ReadCapacityUnits': 5,
-        'WriteCapacityUnits': 5
-    }
-)
-```
-
-#### Consultas Usando LSI:
-
-* **Consultar posts por data:**
-```python
-response = table.query(
-    KeyConditionExpression=Key('UserId').eq('user123') & Key('PostDate').between('2023-01-01', '2023-12-31')
-)
-```
-
-* **Consultar posts por status:**
-```python
-response = table.query(
-    IndexName='StatusIndex',
-    KeyConditionExpression=Key('UserId').eq('user123') & Key('Status').eq('published')
-)
-```
-
-### Exemplo de Uso de GSI
-**Cenário:** Uma aplicação de e-commerce onde queremos consultar produtos por categoria e também por vendedor. A tabela principal é baseada no ID do produto.
-
-**Tabela Principal:**
-
-* **Tabela:** Products
-* **Chave de Partição:** ProductId (ID do produto)
-* **Atributos:** Category (Categoria), SellerId (ID do vendedor)
-
-**Necessidade:** Consultar produtos por categoria e também listar todos os produtos de um vendedor específico.
-
-**Solução:** Usar GSIs para permitir consultas com base em `Category` e `SellerId`.
-
-#### Definição da Tabela com GSIs:
-
-```python
-import boto3
-
-dynamodb = boto3.resource('dynamodb')
-
-table = dynamodb.create_table(
-    TableName='Products',
-    KeySchema=[
-        {
-            'AttributeName': 'ProductId',
-            'KeyType': 'HASH'  # Chave de Partição
-        }
-    ],
-    AttributeDefinitions=[
-        {
-            'AttributeName': 'ProductId',
-            'AttributeType': 'S'
-        },
-        {
-            'AttributeName': 'Category',
-            'AttributeType': 'S'
-        },
-        {
-            'AttributeName': 'SellerId',
-            'AttributeType': 'S'
-        }
-    ],
-    GlobalSecondaryIndexes=[
-        {
-            'IndexName': 'CategoryIndex',
-            'KeySchema': [
-                {
-                    'AttributeName': 'Category',
-                    'KeyType': 'HASH'
-                },
-                {
-                    'AttributeName': 'ProductId',
-                    'KeyType': 'RANGE'
-                }
-            ],
-            'Projection': {
-                'ProjectionType': 'ALL'
-            },
-            'ProvisionedThroughput': {
-                'ReadCapacityUnits': 10,
-                'WriteCapacityUnits': 5
-            }
-        },
-        {
-            'IndexName': 'SellerIndex',
-            'KeySchema': [
-                {
-                    'AttributeName': 'SellerId',
-                    'KeyType': 'HASH'
-                },
-                {
-                    'AttributeName': 'ProductId',
-                    'KeyType': 'RANGE'
-                }
-            ],
-            'Projection': {
-                'ProjectionType': 'ALL'
-            },
-            'ProvisionedThroughput': {
-                'ReadCapacityUnits': 10,
-                'WriteCapacityUnits': 5
-            }
-        }
-    ],
-    ProvisionedThroughput={
-        'ReadCapacityUnits': 5,
-        'WriteCapacityUnits': 5
-    }
-)
-```
-
-#### Consultas Usando GSIs:
-
-* **Consultar produtos por categoria:**
-```python
-response = table.query(
-    IndexName='CategoryIndex',
-    KeyConditionExpression=Key('Category').eq('Electronics')
-)
-```
-
-* **Consultar produtos por vendedor:**
-```python
-response = table.query(
-    IndexName='SellerIndex',
-    KeyConditionExpression=Key('SellerId').eq('seller123')
-)
-```
-
-#### Conclusão
-
-**Quando Usar LSI:**
-
-* Quando você precisa de uma chave de classificação adicional para consultar os dados.
-* A chave de partição permanece a mesma que a tabela principal.
-* Exemplos incluem casos onde você deseja consultar dados ordenados por diferentes critérios, como status ou data.
-
-**Quando Usar GSI:**
-
-* Quando você precisa de uma chave de partição diferente da tabela principal para suas consultas.
-* Pode ser adicionado após a criação da tabela.
-* Útil para criar consultas flexíveis e independentes da estrutura original da tabela, como consultar por atributos como categoria ou vendedor.
-
-`
-Escolher entre LSI e GSI depende dos requisitos específicos de consulta e acesso aos dados da sua aplicação. LSIs são ótimos para consultas adicionais mantendo a mesma chave de partição, enquanto GSIs oferecem maior flexibilidade para criar consultas completamente novas e independentes.
-`
