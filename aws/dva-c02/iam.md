@@ -69,8 +69,3 @@ Agora, veja como funciona:
 ### ✨ Dica para a prova AWS Developer:
 - **IAM é um serviço global**: não depende de regiões.
 - Você usa IAM para controlar **quem pode fazer o quê, e onde**.
-
----
-
-📌 **Curtiu?** Pode usar este README pra revisar, colar no seu projeto ou até estudar com amigos.
-
