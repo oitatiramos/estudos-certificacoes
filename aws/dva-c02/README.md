@@ -1,149 +1,114 @@
-# 📚 Plano de Estudos – AWS Certified Developer Associate (DVA-C02)
+# 📚 Plano de Estudos AWS Certified Developer – Associate (DVA-C02)
 
-## 🗓️ Período: 21 de julho até 28 de novembro de 2025  
-## 🧠 Carga diária: 1h de estudo  
-## 🚀 Projeto prático: Amigas na Estrada (API em Java)
+Este é o meu plano de estudos detalhado para a certificação **AWS Certified Developer – Associate (DVA-C02)**.  
 
----
-
-## 🎯 Objetivo
-Conquistar a certificação **AWS Developer Associate (DVA-C02)** com domínio prático sobre:
-
-- **API Gateway**
-- **AWS Lambda**
-- **DynamoDB**
-- **SQS e SNS**
-- **AWS SAM**
-- **AWS SDK (Java)**
+📅 **Data da Prova:** **28 de novembro de 2025**  
+📌 **Carga horária:** ~1h por dia (segunda a sexta)  
 
 ---
 
-## 📘 Curso Base: Stephane Maarek  
-## 🧪 Simulados: Stephane Maarek + Tutorials Dojo (12 no total)  
-## 🛠️ Projeto de apoio: *Amigas na Estrada* – API para conectar mulheres que viajam sozinhas
+## 📆 Cronograma por Tema (com cores)
+
+### <span style="color:#FF9800;">**🔶 Semanas 1–2: Fundamentos e AWS Lambda (10h)**</span>  
+🎯 **Objetivo:** Entender os fundamentos da AWS e dominar o AWS Lambda.  
+- [ ] **Segunda:** Introdução à certificação + visão geral do Lambda (Maarek + docs).  
+- [ ] **Terça:** Configuração de funções Lambda (console AWS).  
+- [ ] **Quarta:** Triggers, permissões (IAM) e integrações.  
+- [ ] **Quinta:** Laboratório prático: função Lambda que processa eventos.  
+- [ ] **Sexta:** Revisão: limites, performance e boas práticas.  
 
 ---
 
-## ✅ Semana 1 – 21 a 27 de julho  
-**Foco:** Introdução à AWS, IAM, CLI, SDK
-
-| Dia | Aula (Stephane Maarek) | Tarefa prática no projeto |
-|-----|------------------------|----------------------------|
-| 21/07 (seg) | Visão geral do exame | Criar README com o plano de estudos |
-| 22/07 (ter) | IAM: usuários, grupos e políticas | Criar política de IAM para uso no projeto |
-| 23/07 (qua) | IAM: roles, security best practices | Criar Role para execução de Lambda |
-| 24/07 (qui) | AWS CLI | Instalar CLI e testar comandos `aws sts get-caller-identity` |
-| 25/07 (sex) | AWS SDK (Java) parte 1 | Configurar SDK no projeto e listar buckets S3 |
-| 26/07 (sab) | AWS SDK (Java) parte 2 | Criar chamada Java para DynamoDB local (stub) |
-| 27/07 (dom) | Revisão semanal | Escrever no README o que aprendeu na semana |
+### <span style="color:#3F51B5;">**🔷 Semanas 3–4: API Gateway (10h)**</span>  
+🎯 **Objetivo:** Criar e gerenciar APIs serverless com API Gateway.  
+- [ ] **Segunda:** Visão geral do API Gateway (Maarek + docs).  
+- [ ] **Terça:** Criar APIs REST no console AWS.  
+- [ ] **Quarta:** Integração API Gateway + Lambda.  
+- [ ] **Quinta:** Segurança: autenticação/autorização (IAM/Cognito).  
+- [ ] **Sexta:** Deploy e teste com Postman/cURL.  
 
 ---
 
-## ✅ Semana 2 – 28 de julho a 3 de agosto  
-**Foco:** Lambda + primeiros testes com SAM
-
-| Dia | Aula (Stephane Maarek) | Tarefa prática no projeto |
-|-----|------------------------|----------------------------|
-| 28/07 (seg) | AWS Lambda – visão geral | Criar função Lambda simples com retorno estático |
-| 29/07 (ter) | Lambda – triggers e runtime | Criar trigger por API Gateway |
-| 30/07 (qua) | Lambda com Java | Criar Lambda usando Maven e Java no projeto |
-| 31/07 (qui) | Lambda com SDK | Invocar Lambda via SDK no seu projeto |
-| 01/08 (sex) | Lambda e variáveis de ambiente | Usar env vars para configuração de ambiente |
-| 02/08 (sab) | AWS SAM – primeiros passos | Instalar SAM CLI e rodar `sam init` |
-| 03/08 (dom) | Revisão + commit semanal | Testar `sam build` e `sam local invoke` |
+### <span style="color:#4CAF50;">**🟢 Semanas 5–6: DynamoDB (10h)**</span>  
+🎯 **Objetivo:** Dominar o DynamoDB (NoSQL).  
+- [ ] **Segunda:** Introdução ao DynamoDB: tabelas, índices e chaves.  
+- [ ] **Terça:** Criação de tabelas e índices no console.  
+- [ ] **Quarta:** Operações de leitura/escrita e integração com Lambda.  
+- [ ] **Quinta:** Escalabilidade, performance e melhores práticas.  
+- [ ] **Sexta:** Projeto prático: Lambda + DynamoDB.  
 
 ---
 
-## ✅ Semana 3 – 4 a 10 de agosto  
-**Foco:** API Gateway
-
-| Dia | Aula (Stephane Maarek) | Tarefa prática no projeto |
-|-----|------------------------|----------------------------|
-| 04/08 | API Gateway - tipos e integração | Criar API REST no API Gateway |
-| 05/08 | API Gateway + Lambda | Integrar endpoint com Lambda |
-| 06/08 | API Gateway com autenticação | Configurar Auth por chave de API |
-| 07/08 | Mapping templates | Criar template para entrada/saída de JSON |
-| 08/08 | SDK + chamada externa | Chamar o endpoint via Java SDK |
-| 09/08 | SAM + deploy de API | Criar template SAM com Lambda + API Gateway |
-| 10/08 | Revisão semanal | Desenhar arquitetura no README |
+### <span style="color:#E91E63;">**🟣 Semanas 7–8: SQS e SNS (10h)**</span>  
+🎯 **Objetivo:** Entender mensageria e notificações.  
+- [ ] **Segunda:** Visão geral SQS e SNS: filas padrão e FIFO.  
+- [ ] **Terça:** Criar filas e tópicos no console AWS.  
+- [ ] **Quarta:** Integração SQS/SNS com Lambda.  
+- [ ] **Quinta:** Diferenças, casos de uso e limites.  
+- [ ] **Sexta:** Projeto prático: fluxo com SQS/SNS + Lambda.  
 
 ---
 
-## ✅ Semana 4 – 11 a 17 de agosto  
-**Foco:** DynamoDB
-
-| Dia | Aula (Stephane Maarek) | Tarefa prática no projeto |
-|-----|------------------------|----------------------------|
-| 11/08 | DynamoDB – conceitos básicos | Criar tabela `usuarios_viagem` |
-| 12/08 | Operações CRUD | Criar função para salvar usuário |
-| 13/08 | Index secundário | Criar GSI para buscas por destino |
-| 14/08 | Paginação e limites | Adicionar busca paginada |
-| 15/08 | SDK Java com DynamoDB | Criar camada DAO usando o SDK |
-| 16/08 | SAM com DynamoDB | Atualizar template SAM com permissão à tabela |
-| 17/08 | Revisão semanal | Testar integração fim a fim |
+### <span style="color:#00BCD4;">**🔵 Semanas 9–10: AWS SAM (10h)**</span>  
+🎯 **Objetivo:** Desenvolver e deployar aplicações serverless com AWS SAM.  
+- [ ] **Segunda:** Introdução ao AWS SAM + instalação CLI.  
+- [ ] **Terça:** Estrutura de templates SAM + primeiro deploy.  
+- [ ] **Quarta:** Laboratório prático: aplicação com SAM.  
+- [ ] **Quinta:** Debugging e monitoramento (CloudWatch).  
+- [ ] **Sexta:** Deploy de uma aplicação completa com SAM.  
 
 ---
 
-## ✅ Semana 5 – 18 a 24 de agosto  
-**Foco:** SQS e SNS
-
-| Dia | Aula (Stephane Maarek) | Tarefa prática no projeto |
-|-----|------------------------|----------------------------|
-| 18/08 | SQS – visão geral | Criar fila para mensagens entre usuárias |
-| 19/08 | Envio e leitura de mensagens | Criar Lambda para consumir mensagens da fila |
-| 20/08 | Dead Letter Queue | Criar DLQ para a fila principal |
-| 21/08 | SNS – visão geral | Criar tópico para notificações |
-| 22/08 | Subscrição por e-mail | Testar envio real de e-mail |
-| 23/08 | SDK Java com SQS e SNS | Criar classe que publica e lê mensagens via SDK |
-| 24/08 | Revisão semanal | Atualizar arquitetura do projeto |
+### <span style="color:#9C27B0;">**🟤 Semanas 11–12: AWS SDK (Java) (10h)**</span>  
+🎯 **Objetivo:** Dominar o AWS SDK para Java.  
+- [ ] **Segunda:** Introdução ao SDK e configuração ambiente.  
+- [ ] **Terça:** SDK com Lambda e DynamoDB.  
+- [ ] **Quarta:** SDK com SQS/SNS.  
+- [ ] **Quinta:** Autenticação (IAM) e melhores práticas.  
+- [ ] **Sexta:** Aplicação integrando múltiplos serviços com SDK.  
 
 ---
 
-## ✅ Semana 6 – 25 a 31 de agosto  
-**Foco:** SAM avançado + Deploy
-
-| Dia | Aula (Stephane Maarek) | Tarefa prática no projeto |
-|-----|------------------------|----------------------------|
-| 25/08 | SAM + variáveis e profiles | Adicionar `env.json` ao projeto |
-| 26/08 | SAM Deploy + Pipeline | Fazer deploy manual com `sam deploy` |
-| 27/08 | Debugging com SAM | Rodar `sam logs` e interpretar erros |
-| 28/08 | Templates avançados | Modularizar templates |
-| 29/08 | API + Lambda + DynamoDB com SAM | Juntar tudo em um único template |
-| 30/08 | Simulado 1 (Maarek) | Analisar erros e revisar aulas |
-| 31/08 | Revisão + pequenos ajustes | Documentar funções no projeto |
+### <span style="color:#795548;">**🟠 Semanas 13–16: Prática Intensiva e Revisão (20h)**</span>  
+🎯 **Objetivo:** Consolidar os conhecimentos.  
+- [ ] **Semana 13:** Projeto completo serverless (Lambda, API Gateway, DynamoDB, SQS/SNS, SAM, SDK).  
+- [ ] **Semana 14:** Revisão do curso (IAM, CloudFormation, ECS) + leitura de whitepapers.  
+- [ ] **Semana 15:** Laboratórios avançados (troubleshooting).  
+- [ ] **Semana 16:** Revisão geral de todos os serviços e cenários do exame.  
 
 ---
 
-## ✅ Setembro a novembro – 1º set a 24 nov  
-**Foco:** Simulados, revisões, ajustes no projeto
+### <span style="color:#607D8B;">**⚫ Semana 17 + 3 dias finais: Simulados e Revisão Final (7h)**</span>  
+🎯 **Objetivo:** Avaliar conhecimento e ajustar pontos fracos.  
+- [ ] **Segunda:** Simulado 1 + análise de erros.  
+- [ ] **Terça:** Revisão dos erros + leitura de docs.  
+- [ ] **Quarta:** Simulado 2 + análise de erros.  
+- [ ] **Quinta:** Revisão de tópicos fracos e prática hands-on.  
+- [ ] **Sexta:** Simulado 3 + revisão final.  
 
-- Fazer **3 simulados por mês**
-- Intercalar entre **Maarek** e **Tutorials Dojo**
-- Revisar os erros no dia seguinte
-- Corrigir e aprimorar o projeto com base nos tópicos fracos
-- Preparar documentação técnica da aplicação
+**Últimos 3 dias (25–27 nov):**  
+- [ ] **Dia 1:** Simulado 4 + análise de erros.  
+- [ ] **Dia 2:** Revisão leve de anotações e docs.  
+- [ ] **Dia 3:** Descanso ou revisão rápida de pontos-chave.  
 
----
-
-## 📅 Semana Final – 25 a 28 de novembro
-
-| Dia | Atividade |
-|-----|-----------|
-| 25/11 (ter) | Simulado final |
-| 26/11 (qua) | Revisão de erros comuns |
-| 27/11 (qui) | Revisão geral de arquitetura e conceitos-chave |
-| 28/11 (sex) | ✅ Prova DVA-C02 🎉 |
+**28 de novembro:** 🌟 **Dia da prova!** Relaxar e revisar apenas pontos-chave.  
 
 ---
 
-## 🧠 Dicas finais
+## 🛠️ Recursos
 
-- Foque na prática constante com seu projeto.
-- Use o SDK Java para reforçar o entendimento de cada serviço.
-- Marque os erros recorrentes nos simulados e revise sempre.
-- Atualize este README semanalmente com aprendizados.
+- **Curso:** [Stephane Maarek – AWS Certified Developer – Associate](https://www.udemy.com/)  
+- **Simulados:** Stephane Maarek + Tutorials Dojo  
+- **Documentação Oficial AWS:** [https://docs.aws.amazon.com/](https://docs.aws.amazon.com/)  
+- **Free Tier AWS:** Para prática hands-on  
 
 ---
 
-Vamos com tudo, Tati! 🚀💜  
-Você vai arrasar na prova e levar seu projeto a outro nível!
+## ✅ Dicas Finais
+
+- Praticar **todos os serviços na AWS Free Tier**.  
+- Revisar os **whitepapers e FAQs da AWS**.  
+- Analisar com calma os erros dos simulados.  
+- Focar nos tópicos mais cobrados: **Lambda, API Gateway, DynamoDB, SQS, SNS, IAM, SAM e SDK**.  
+
+> ✨ **Meta:** Estar confiante e preparada para a prova no dia 28/11/2025!
